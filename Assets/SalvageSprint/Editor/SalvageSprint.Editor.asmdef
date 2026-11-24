@@ -1,0 +1,14 @@
+{
+  "name": "SalvageSprint.Editor",
+  "rootNamespace": "SalvageSprint.Editor",
+  "references": [
+    "SalvageSprint.Core",
+    "SalvageSprint.Runtime",
+    "Unity.AI.Navigation",
+    "Unity.RenderPipelines.Universal.Runtime",
+    "Unity.RenderPipelines.Core.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "SalvageSprint.Core",
+  "rootNamespace": "SalvageSprint.Core",
+  "noEngineReferences": true
+}

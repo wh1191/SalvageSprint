@@ -1,0 +1,5 @@
+{
+  "name": "SalvageSprint.Runtime",
+  "rootNamespace": "SalvageSprint",
+  "references": ["SalvageSprint.Core", "Unity.InputSystem"]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "SalvageSprint.Tests",
+  "references": ["SalvageSprint.Core"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
