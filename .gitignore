@@ -11,4 +11,31 @@
 .vs/
 .idea/
 
+# Additional generated IDE files
+/[Bb]in/
+*.suo
+*.user
+*.userprefs
+*.DotSettings.user
+*.opendb
+*.VC.db
+
+# Rider-gernarated files
+//[Aa]ssets/Plugins/Editor/JetBrains*
+
+# Logs and crash reports
+*.log
+/mono_crash.*
+/sysinfo.txt
+
+# Unity profiling and build diagnostics
+/[Mm]emory[Cc]aptures/
+/*_BackUpThisFolder_ButDontShipitWithYourGame/
+/*_BurstDebugInformation_DoNotShip/
+
+# Generated asset meta files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
 # Generated scenes/materials/NavMesh assets are source: keep them after generation.

@@ -11,6 +11,7 @@ namespace SalvageSprint
         [SerializeField] private Transform[] surveyPoints;
         [SerializeField, Min(.05f)] private float decisionInterval = .15f;
         [SerializeField] private bool logDecisionChanges;
+        // The rival remembers which pickups have failed to reach, and ignores them for a while.
         private readonly Dictionary<int, float> failedUntil = new Dictionary<int, float>();
         private RaceActor actor;
         private Navigator navigator;
@@ -38,29 +39,41 @@ namespace SalvageSprint
 
         private void Update()
         {
-            if (!match.IsRunning) { navigator.Cancel(); return; }
+            if (!match.IsRunning)
+            {
+                navigator.Cancel();
+                return;
+            }
+            
             TravelStatus travel = navigator.Poll();
+            
             if (Time.time < nextDecision) return;
+            
             nextDecision = Time.time + decisionInterval;
+            
             if (travel == TravelStatus.Failed && rememberedId >= 0)
             {
                 failedUntil[rememberedId] = Time.time + 6;
                 LastFailure = "Route failed for pickup " + rememberedId + "; ignore for 6 seconds";
             }
+            
             if (rememberedId >= 0 && !match.IsAvailable(rememberedId)) rememberedId = -1;
+            
             if (CurrentDecision.Task == TaskKind.Explore
                 && (travel == TravelStatus.Arrived || travel == TravelStatus.Failed))
-                surveyIndex = (surveyIndex + 1) % surveyPoints.Length;
+                surveyIndex = (surveyIndex + 1) % surveyPoints.Length; // Move to the next survey point if exploring and done with the current one.
 
-            LastObservation = sensor.Capture(actor, rememberedId, IsBlocked);
+            LastObservation = sensor.Capture(actor, rememberedId, IsBlocked); // Capture the current observation of the environment.
             CurrentFacts = DecisionPolicy.Infer(LastObservation);
             Decision next = DecisionPolicy.Choose(CurrentFacts);
             bool changed = next.Task != CurrentDecision.Task || next.TargetId != CurrentDecision.TargetId;
             CurrentDecision = next;
             DecisionCount++;
+            
             if (changed && logDecisionChanges)
                 Debug.Log($"[{Time.time:F1}] {next.Task} target={next.TargetId}: {next.Reason}", this);
 
+            
             if (next.Task == TaskKind.Deliver)
             {
                 rememberedId = -1;

@@ -8,6 +8,7 @@ namespace SalvageSprint.Core
     {
         public const string Label = "Part 1 starter: nearest candidate";
 
+        // Infer the agent's facts from its observation. This is a simple, naive implementation that ignores visibility and memory.
         public static AgentFacts Infer(Observation observation)
         {
             if (observation.Carrying)
@@ -28,6 +29,7 @@ namespace SalvageSprint.Core
 
         public static Decision Choose(AgentFacts facts)
         {
+            // Deliberately naive: ignores RetainedTarget and any other facts.
             if (facts.NeedsDelivery)
                 return new Decision(TaskKind.Deliver, -1, "Cargo held: return to depot");
             return facts.HasUsableTarget

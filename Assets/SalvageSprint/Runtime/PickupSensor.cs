@@ -18,13 +18,17 @@ namespace SalvageSprint
             foreach (SalvagePickup item in match.Pickups)
             {
                 if (!match.IsAvailable(item.Id)) continue;
+                
                 float distance = MatchController.FlatDistanceSquared(transform.position, item.transform.position);
                 bool remembered = item.Id == rememberedId;
                 bool inRange = distance <= radius * radius;
+                
                 if (!inRange && !remembered) continue;
+                
                 bool visible = inRange && !Physics.Linecast(transform.position + Vector3.up,
                     item.transform.position + Vector3.up * .6f,
                     match.SightBlockers, QueryTriggerInteraction.Ignore);
+                
                 // Broad-phase candidates are data to process, not automatically known targets.
                 candidates.Add(new Candidate(item.Id, distance, true, visible, remembered, blocked(item.Id)));
             }
