@@ -5,8 +5,9 @@ Your Game AI assignment project for the whole course. Keep the same project and 
 **Start with your current stage. You do not need to understand every file before making progress.** The supplied code handles the game, input, scoring and navigation. Your main implementation work this week is in **[DecisionPolicy.cs](Assets/SalvageSprint/Core/DecisionPolicy.cs)**.
 
 This README is your work order. [EVIDENCE.md](EVIDENCE.md) holds brief observations and your checkpoint record. Omniway holds announcements, submission links and official course information. There is no separate lab project, lab repository or lab submission.
+After Thursday’s reference release, `main` will contain the completed Week 1 reference implementation. The original policy is preserved under `week1-before-fixes`. Keep working in your existing repository.. Read about how to use it here: [Teacher versions: tags and reference code](#teacher-versions-tags-and-reference-code).
 
-**Wednesday 25 November: if your game and IDE already work, keep your existing project and start at [Wednesday: read one decision together](#wednesday-read-one-decision-together).** Work through Investigations 1–3 with your group and the teacher, then implement Stage 2 and continue to Stage 3. Stage 4 is Thursday’s focus. Read the current section as you work; you do not need to read the whole README before starting.
+**Thursday 26 November: continue from your current stage.** We will trace unexpected behaviour, complete the perception, commitment and recovery rules, then verify the six scenarios. If Stages 2–3 are unfinished, begin there with support. Keep your existing repository and record brief evidence as you work.
 
 ## Where to start
 
@@ -34,12 +35,45 @@ Friday has other scheduled activities. Aim to finish during Thursday's session i
 
 This week focuses on Explore, Collect and Deliver. Behaviour trees, A*, steering/group behaviour, GOAP and the danger response belong to January.
 
+## Teacher versions: tags and reference code
+
+**Keep working in your existing assignment repository and on your normal working branch.** The teacher's versions are for comparison and support.
+
+A **tag** names a particular saved commit: a snapshot of the project at that point. Later changes to a branch do not update that tagged snapshot.
+
+| Teacher tag | What it contains | When to use it |
+|---|---|---|
+| `week1-before-fixes` | The teaching baseline before the Stage 2–4 policy corrections, including deliberate weaknesses | Revisit the original behaviour and understand what a correction changes |
+| `week1-reference` | One completed implementation of the Week 1 policy rules | Compare approaches, investigate a failure or recover when stuck; the teacher will announce its publication after verification |
+
+The reference is supporting material, not an additional assignment or a new project to submit.
+
+### View a version or compare the changes
+
+1. Open the [teacher-provided repository](https://github.com/CalleFreme/gp26-ai-salvage-sprint-starter) on GitHub.
+2. Open the branch selector above the file list, select **Tags**, and choose the announced tag. You can also use the repository's [tags page](https://github.com/CalleFreme/gp26-ai-salvage-sprint-starter/tags).
+3. Open `SalvageSprint/Assets/SalvageSprint/Core/DecisionPolicy.cs` and inspect `Infer`, the eligibility rule and `Choose`.
+4. Once both tags have been published, use the [before/after comparison](https://github.com/CalleFreme/gp26-ai-salvage-sprint-starter/compare/week1-before-fixes...week1-reference). Read each changed block alongside the corresponding README stage.
+
+Browsing a tag on GitHub leaves your own working files unchanged. Teacher tags and updates do not automatically appear in repositories created from the template. View the teacher/template repo on GitHub.com to read and compare them; no local tag checkout or merge is required for this workflow.
+
+### Use the reference in your own work
+
+1. Commit your current progress before applying changes, so you can compare with or return to it.
+2. Identify one failing case. Compare the relevant function with your implementation and explain the difference before changing it.
+3. Implement or copy only the correction you need into your existing project. Preserve your other changes, scenes and `EVIDENCE.md`.
+4. Run the relevant tests, then all supplied tests, and replay the affected scenario. Extra teacher example tests may increase the total; the original suite contains 17 tests.
+5. Record reference code you used under **Collaboration and help** in `EVIDENCE.md`, including what you changed and how you checked it. Commit the result.
+
+You may use the supplied reference with acknowledgement and understanding. Your checkpoint still needs your own trace, scenario results, correction and independent check. Submit your own repository and exact commit. The optional `week1-checkpoint` tag mentioned below belongs to your repository and marks your own work; it is separate from the teacher's tags.
+
 ## Stage 0 — Setup, controls and baseline
 
 Our baseline is **Unity 6000.3.26f1 (Unity 6.3 LTS)**. If another released 6000.3.x patch is already installed, keep it for now and record its exact version. Ask for help if setup is blocked.
 
 1. On the starter repository, choose **Use this template → Create a new repository**, then clone your own copy. ZIP download and creating your own repository is also supported; retain the whole project, including README, EVIDENCE.md and configuration files.
-2. Add the nested **SalvageSprint** folder to Unity Hub. It contains Assets, Packages and ProjectSettings. Wait for import and compilation; enable the Input System backend and restart if prompted.
+2. If you create your repository after the reference/solution release, it will already contain the completed policy. To practice Stages 2-4 from the original starting point, copy only `DecisionPolicy.cs` from `week1-before-fixes` into your project.
+3. Add the nested **SalvageSprint** folder to Unity Hub. It contains Assets, Packages and ProjectSettings. Wait for import and compilation; enable the Input System backend and restart if prompted.
 3. For Visual Studio, check Package Manager for **Visual Studio Editor** (`com.unity.ide.visualstudio`); install it if missing. Under **Edit → Preferences → External Tools**, select your installed Visual Studio and **Regenerate project files**. Open a script from Unity and check type recognition/code completion. The package dependency belongs in the committed package files; generated solution/project files stay ignored.
 4. Open `Assets/SalvageSprint/Generated/Scenes/01_Normal.unity`. If absent, run **Tools → Salvage Sprint → Create Course Scenes** once. Tell the teacher if creation fails. This is setup, not an AI implementation task. Re-running the builder does not reset existing scenes.
 5. Play: WASD/arrows or gamepad left stick. Collect gold scrap automatically; carry one piece and deliver to the cyan depot. First to five deliveries wins; at the two-minute timeout, highest banked score wins, or equal scores draw.
@@ -49,13 +83,16 @@ Our baseline is **Unity 6000.3.26f1 (Unity 6.3 LTS)**. If another released 6000.
 
 **Done:** a playable, committed baseline. Suggested commit: `week1: working baseline`.
 
-## Stage 1 instructions can be found summarized towards the end of the README. Finish it before or after the group investigations.
+## Stage 1 instructions can be found summarized towards the end of the README. Finish it before or after the Wednesday investigations.
+**Make sure to use the fixed version of `Navigator.cs` and the `NavigationFeedback` class's `Classify` method in `DecisionModel.cs`.**
 
 ## Wednesday: read one decision together
 
+Investigations 1–2 describe the original policy preserved under `week1-before-fixes`. If you are viewing the completed reference, open the baseline version on GitHub alongside it. The reference’s conditions, control flow and test results will differ.
+
 Begin with the group reading and prediction tasks below; you will edit the policy in Stage 2 afterwards. Predict each answer before reading “Check together.”
 
-Work in groups of **2–3**, as arranged in class. Take turns operating the computer and explaining. Everyone should explain at least one case. Then make changes in your own repository. These investigations prepare Stages 2–3; they are not extra submissions.
+Work in groups of **2–3**, as arranged in class (contact CJ if you want to do this but did not attend Wednesday). Take turns operating the computer and explaining. Everyone should explain at least one case. Then make changes in your own repository. These investigations prepare Stages 2–3; they are not extra submissions.
 
 ### First: the small part of the code you need
 
@@ -137,6 +174,7 @@ Run the normal scene. Pause while the rival travels and identify its task, targe
 Keep one useful observation for your existing EVIDENCE.md trace. You do not need to transcribe every function or submit these tables separately.
 
 ## Stage 2 — Choose from visible or remembered pickups
+**From here on, you can look at the teacher repo's version of `DecisionPolicy` to get a sense of the fixes we need for our AI. It's a good idea to look at the commit which introduced these changes, so you can see exactly which lines of code changed**
 
 **Goal:** a nearby hidden unknown pickup cannot win merely by being nearer.
 
