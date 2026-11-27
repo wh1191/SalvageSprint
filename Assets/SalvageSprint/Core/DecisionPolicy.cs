@@ -4,24 +4,23 @@ namespace SalvageSprint.Core
     // and respond to the navigation-failure flag supplied by the brain.
     public static class DecisionPolicy
     {
-        public const string Label = "Part 1 reference: known, committed, recoverable";
+        public const string Label = "Part 1 checkpoint: known, committed, recoverable";
 
+        // A pickup qualifies only if it is available, known (visible or remembered),
+        // and not temporarily blocked after a navigation failure.
         private static bool IsEligible(Candidate candidate)
         {
-            return candidate.Available
-                && (candidate.Visible || candidate.Remembered)
-                && !candidate.Blocked;
+            return candidate.Available && (candidate.Visible || candidate.Remembered) && !candidate.Blocked;
         }
 
         public static AgentFacts Infer(Observation observation)
         {
-            // Cargo is an actual game-state fact. Deliver even if collection
-            // targets are missing, hidden, or temporarily blocked.
+            // 1. Cargo priority: always deliver held cargo before collecting more.
             if (observation.Carrying)
                 return new AgentFacts(true, -1, false);
 
-            // First look for the existing target. Match its ID, not its
-            // array position. It can occur anywhere in the candidate list.
+            // 2. Target retention: match CurrentTargetId by ID (not array index) and
+            // keep it while still eligible, avoiding switching to closer distractions.
             foreach (Candidate candidate in observation.Candidates)
             {
                 if (candidate.Id == observation.CurrentTargetId
@@ -31,8 +30,8 @@ namespace SalvageSprint.Core
                 }
             }
 
-            // If the old task is no longer useful, find a new eligible target.
-            // This compares horizontal straight-line distance, not path length.
+            // 3. New target search: pick the nearest eligible pickup by squared horizontal
+            // distance; if none qualify, nearest stays -1 so Choose falls back to Explore.
             int nearest = -1;
             float distance = float.PositiveInfinity;
             foreach (Candidate candidate in observation.Candidates)
@@ -59,6 +58,7 @@ namespace SalvageSprint.Core
                 return new Decision(TaskKind.Explore, -1,
                     "No eligible known pickup: visit the next survey point");
 
+            // Distinguish retaining an existing target from picking a new one.
             string reason = facts.RetainedTarget
                 ? "Retain current eligible target"
                 : "Nearest eligible known pickup";
